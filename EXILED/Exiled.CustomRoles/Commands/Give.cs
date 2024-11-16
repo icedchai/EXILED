@@ -100,30 +100,19 @@ namespace Exiled.CustomRoles.Commands
                         break;
                 }
 
-                string[] newargs;
-                List<ReferenceHub> list = RAUtils.ProcessPlayerIdOrNamesList(arguments, 1, out newargs);
+                IEnumerable<Player> list = Player.GetProcessedData(arguments, 1);
                 if (list == null)
                 {
                     response = "Cannot find player! Try using the player ID!";
                     return false;
                 }
 
-                foreach (ReferenceHub hub in list)
+                foreach (Player player in list)
                 {
-                    Player player = Player.Get(hub);
                     role.AddRole(player);
                 }
 
-                if (list.Count == 1)
-                {
-                    Player player = Player.Get(list[0]);
-                    role.AddRole(player);
-                    response = $"Customrole {role.Name} given to {player.Nickname} ({player.UserId})";
-                }
-                else
-                {
-                    response = $"Customrole {role.Name} given to {list.Count} players!";
-                }
+                response = $"Customrole {role.Name} given to {list.Count()} players!";
 
                 return true;
             }

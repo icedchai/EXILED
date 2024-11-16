@@ -18,6 +18,7 @@ namespace Exiled.CustomItems.Commands
     using Exiled.Permissions.Extensions;
 
     using RemoteAdmin;
+    using UnityStandardAssets.Effects;
     using Utils;
 
     /// <summary>
@@ -101,35 +102,23 @@ namespace Exiled.CustomItems.Commands
                     break;
             }
 
-            string[] newargs;
-            List<ReferenceHub> list = RAUtils.ProcessPlayerIdOrNamesList(arguments, 1, out newargs);
+            IEnumerable<Player> list = Player.GetProcessedData(arguments, 1);
+
             if (list == null)
             {
                 response = "Cannot find player! Try using the player ID!";
                 return false;
             }
 
-            foreach (ReferenceHub hub in list)
+            foreach (Player player in list)
             {
-                Player player = Player.Get(hub);
-                if (!CheckEligible(player))
+                if (CheckEligible(player))
                 {
-                    list.Remove(hub);
+                    item?.Give(player);
                 }
-
-                item?.Give(player);
             }
 
-            if (list.Count == 1)
-            {
-                Player player = Player.Get(list[0]);
-                response = $"{item?.Name} given to {player.Nickname} ({player.UserId})";
-            }
-            else
-            {
-                response = $"{item?.Name} given to {list.Count} players!";
-            }
-
+            response = $"{item?.Name} given to {list.Count()} players!";
             return true;
         }
 
