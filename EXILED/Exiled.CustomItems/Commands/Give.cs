@@ -104,7 +104,7 @@ namespace Exiled.CustomItems.Commands
 
             IEnumerable<Player> list = Player.GetProcessedData(arguments, 1);
 
-            if (list == null)
+            if (list.IsEmpty())
             {
                 response = "Cannot find player! Try using the player ID!";
                 return false;
